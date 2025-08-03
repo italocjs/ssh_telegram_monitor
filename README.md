@@ -127,7 +127,7 @@ sudo systemctl status ssh-monitor.service
 - **System logs:** `sudo journalctl -u ssh-monitor.service`
 
 ## Version History
-- **v1.0.2**: Initial release
+- **v1.0.3**: Initial release
 
 ## License
 
