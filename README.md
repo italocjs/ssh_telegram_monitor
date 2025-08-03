@@ -14,6 +14,14 @@ This script is **not a security feature**, it is only a monitoring tool. It does
 - 🌍 **IP geolocation lookup** for external connections
 - 📱 **Telegram notifications** with organized topics
 
+## Screenshots
+
+### Valid Login Notification
+![Valid Login](valid-login.png)
+
+### Invalid Login Attempt Notification
+![Invalid Login](invalid-login.png)
+
 ## Prerequisites
 
 - Linux system with SSH server (OpenSSH)
