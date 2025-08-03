@@ -28,25 +28,7 @@ git clone <repository-url>
 cd ssh_telegram_monitor
 ```
 
-### 2. Setup Files
-
-The scripts use relative paths, so they'll work from wherever you place them:
-
-```bash
-# Create logs directory
-mkdir -p logs
-
-# Copy environment template
-cp .env.template .env
-
-# Make script executable
-chmod +x ssh-monitor.sh
-
-# Secure the environment file
-chmod 600 .env
-```
-
-### 3. Configure Telegram Notifications
+### 2. Configure Telegram Notifications
 
 1. **Create a Telegram Bot:**
    - Message @BotFather on Telegram
@@ -62,22 +44,24 @@ chmod 600 .env
    - Create a group/supergroup with topics enabled
    - Send a message to your desired topic
    - Get the topic ID from the message thread and set `OPTIONAL_TOPIC_ID` in `.env`
+   
+### 3. Environment Configuration
 
-### 4. Environment Configuration
-
-Configure your Telegram credentials:
+Create the `.env` file with your Telegram credentials and preferences. Note that for security purposes, the .env file should NEVER be stored on GitHub - this repository already includes it in the gitignore file.
 
 ```bash
-# Edit the environment file
-nano .env
+# Example .env file:
+# TELEGRAM_BOT_TOKEN=1234567890:ABCdefGHIjklMNOpqrsTUVwxyz
+# TELEGRAM_CHAT_ID=-1001234567890
+# OPTIONAL_TOPIC_ID=2
 ```
-
-Edit the `.env` file with your Telegram credentials and preferences. Note that for security purposes, the .env file should NEVER be stored on GitHub - this repository already includes it in the gitignore file.
 
 ### 5. Test the Setup
 
 ```bash
-# Test manually (requires root)
+# Make script executable
+chmod +x ssh-monitor.sh
+# Test manually
 sudo ./ssh-monitor.sh
 ```
 
@@ -89,7 +73,7 @@ Create a systemd service for continuous monitoring:
 sudo nano /etc/systemd/system/ssh-monitor.service
 ```
 
-Replace `/path/to/ssh-monitor-directory` with your actual installation path:
+Replace `/path/to/ssh-monitor-directory` with your actual script path:
 
 ```ini
 [Unit]
@@ -142,83 +126,9 @@ sudo systemctl status ssh-monitor.service
 - **Main log:** `./logs/ssh-monitor.log` (in the same directory as the scripts)
 - **System logs:** `sudo journalctl -u ssh-monitor.service`
 
-## Telegram Notification Topics
-
-The script supports organized notifications using Telegram topics:
-
-- **server_info**: SSH login/logout events, system information
-- **uptime**: Uptime monitoring (if integrated)
-- **backup**: Backup and timeshift operations
-- **jellyfin**: Media server notifications
-- **general**: General notifications
-
-## Security Considerations
-
-1. **Root Privileges**: The script requires root access to read SSH logs
-2. **Environment File**: Keep `.env` file secure with `chmod 600`
-3. **Rate Limiting**: Configured to prevent notification spam while ensuring security alerts
-4. **Root Login Alerts**: Always notified regardless of rate limiting
-5. **Failed Attempts**: No rate limiting on failed attempts to catch brute force attacks
-
-## Troubleshooting
-
-### Common Issues
-
-1. **Permission Denied:**
-   ```bash
-   sudo chmod +x ssh-monitor.sh
-   sudo chown root:root ssh-monitor.sh
-   ```
-
-2. **Telegram Not Working:**
-   - Verify bot token and chat ID in `.env`
-   - Test with: `curl "https://api.telegram.org/bot<TOKEN>/getMe"`
-
-3. **No SSH Events Detected:**
-   - Check if `journalctl` is available: `sudo journalctl -u ssh.service --no-pager -n 1`
-   - Verify `/var/log/auth.log` exists: `ls -la /var/log/auth.log`
-
-4. **Service Won't Start:**
-   ```bash
-   sudo systemctl status ssh-monitor.service
-   sudo journalctl -u ssh-monitor.service
-   ```
-
-### Log Analysis
-
-```bash
-# View recent SSH monitor logs (adjust path to your installation)
-tail -f /path/to/ssh-monitor-directory/logs/ssh-monitor.log
-
-# View service logs
-sudo journalctl -u ssh-monitor.service -f
-
-# Check for errors
-sudo journalctl -u ssh-monitor.service | grep ERROR
-```
-
 ## Version History
-
-- **v1.0.2**: Current version with integrated Telegram functionality and simplified configuration
-- **v1.0.1**: Enhanced logging and geolocation
-- **v1.0.0**: Initial release
+- **v1.0.2**: Initial release
 
 ## License
 
 This project is open source. Feel free to modify and distribute according to your needs.
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
-
-## Support
-
-For issues and questions:
-1. Check the troubleshooting section
-2. Review the logs for error messages
-3. Ensure all prerequisites are met
-4. Test individual components (Telegram notifications, log access)
